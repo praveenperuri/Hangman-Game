@@ -33,6 +33,7 @@ var hangman = {
 
             var hiddenWord = document.getElementById("hiddenWord");
             hiddenWord.value = this.currentWord;
+            // this.correctGuess = this.currentWord.length;
             var word = document.getElementById("word");
             for (i = 0; i < this.currentWord.length; i++) {
                 //var listitem = "<li id=\""+i+"\">" + " _ " + "</li>"; 
@@ -64,10 +65,8 @@ var hangman = {
                         listitem.innerHTML = this.currentWord.charAt(i);
                         isHit = true;
                     } else if (listitem.innerHTML === input) {
-                        alert("You got this letter already..");
                         isSameletter = true;
                     }
-                    break;
                 }
             }
 
@@ -75,17 +74,19 @@ var hangman = {
 
                 if (isHit) {
                     this.updateGameLog("You are doing well. Keep going !!");
+                    this.checkCorrectGuess();
                     if (this.correctGuess === this.currentWord.length) {
                         this.winCount++;
                         this.updateWinCount(this.winCount);
                         this.updateGuessCount(0);
-                        var continueGame = prompt("Your Score is: [" + this.winCount + "] Press OK to contiue, Cancel to Stop. ");
+                        var continueGame = confirm("Your Score is: [" + this.winCount + "] Press OK to contiue, Cancel to Stop. ");
                         if (continueGame) {
                             this.wordSelector();
                         }
-                    } else {
-                        this.correctGuess++;
-                    }
+                    } 
+                    // else {
+                    //     this.correctGuess++;
+                    // }
                 } else {
 
                     for (i = 0; i < this.lettersUsed.length; i++) {
@@ -109,7 +110,10 @@ var hangman = {
                         this.updateGameLog("Try Again !! ");
                     }
                 }
+            } else {
+                alert("You got this letter already..");
             }
+
 
         } else {
             alert("Please key in ONLY Alphabets !!");
@@ -118,7 +122,7 @@ var hangman = {
     },
 
     restart: function() {
-        return this.initialize();
+        window.location.reload(true);
     },
 
     updateGameLog: function(str) {
@@ -147,6 +151,18 @@ var hangman = {
         this.guessCount = int;
         document.getElementById("guessp").innerHTML = this.guessCount;
 
+    },
+
+    checkCorrectGuess: function() {
+    	this.correctGuess = 0;
+    	for(i=0; i < this.currentWord.length; i++){
+            var id = this.currentWord.charAt(i) + i;
+            var listitem = document.getElementById(id);
+            if (listitem.innerHTML !=  " _ ") {
+    			this.correctGuess++;
+            }
+		}
+		//return this.correctGuess;
     }
 
 
